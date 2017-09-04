@@ -1,2 +1,2 @@
 # congratulator
-adming interface for pythonas
+admin interface for pythonas
