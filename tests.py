@@ -1,7 +1,7 @@
 import unittest
 import sqlalchemy
-from db_conn import engine
-from sql_interface import SqlExecutioner
+from utils.db_conn import engine
+from utils.sql_interface import SqlExecutioner
 
 class TestSqlExecutioner(unittest.TestCase):
 

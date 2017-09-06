@@ -86,11 +86,5 @@ QUERIES = {'ins_answers': ("INSERT INTO `tfrresultsfull`( `supporter_id`, `opera
            'interactions_truncate': ("DELETE FROM `tfrresults`;"),
            }
 
-# conn = engine.connect()
-
-
-# TABLE_HEADERS = {'tfrresults': conn.execute("SELECT * FROM tfrresults").keys(),
- #                'tfrresultsfull': conn.execute("SELECT * FROM tfrresultsfull").keys()
- #                }
 
 

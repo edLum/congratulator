@@ -1,9 +1,9 @@
 import csv, logging
 from time import strftime, localtime
 
-from db_conn import engine
-from csv_handler import UnicodeWriter
-from sql_interface import QUERIES, TABLE_HEADERS, SqlExecutioner
+from utils.db_conn import engine
+from utils.csv_handler import UnicodeWriter
+from utils.sql_interface import QUERIES, SqlExecutioner
 
 
 class Exporter:
@@ -27,27 +27,27 @@ class Exporter:
         self.executioner.run(query)
         print("Done.\n")
 
+
 class InteractionsExporter(Exporter):
     queries = {'select_all': QUERIES['interactions_select_all'],
                'backup': QUERIES['interactions_backup'],     
                'truncate': QUERIES['interactions_truncate'],
               } 
 
-    table_header = TABLE_HEADERS['tfrresults']
-    
     def __init__(self):
         Exporter.__init__(self)
         self.queries = InteractionsExporter.queries
         self.filename  = "tfr-interactions-" + strftime("%Y%m%d", localtime()) + ".csv"
-
-
+        self.table_name = 'tfrresults'
+        self.table_headers = self.executioner.run("SELECT * FROM {}".format(self.table_name)).keys()
+        
     def generate_export(self):
         """Generate TFR interactions export as a list of table rows."""
         self.backup(self.queries['backup'])
         export_list = self.select_all(self.queries['select_all'])
         self.truncate(self.queries['truncate'])
         # insert table header
-        export_list.insert(0, self.table_header)
+        export_list.insert(0, self.table_headers)
 
         return export_list
      
@@ -67,12 +67,12 @@ class ChangesExporter(Exporter):
                'ins_finance': QUERIES['ins_finance_changes'],
               }
 
-    table_header = TABLE_HEADERS['tfrresultsfull']
-
     def __init__(self):
         Exporter.__init__(self)
         self.queries = ChangesExporter.queries
         self.filename  = "tfr-changes-" + strftime("%Y%m%d", localtime()) + ".csv"
+        self.teable_name = 'tfrresultsfull'
+        self.table_headers = self.executioner.run("SELECT * FROM {}".format(self.table_name)).keys()
 
     def initialization_queries(self):
         print("Running initialization queries...\n")
@@ -88,7 +88,7 @@ class ChangesExporter(Exporter):
         export_list = self.select_all(self.queries['select_all'])
         self.truncate(self.queries['truncate'])
         # insert table header
-        export_list.insert(0, self.table_header)
+        export_list.insert(0, self.table_headers)
         return export_list
     
     def create_changes_csv(self):
