@@ -3,7 +3,7 @@ import sqlalchemy.sql as sql
 import sqlalchemy.orm
 
 # Constants setting the configuration of database connection
-DB_NAME = 'sandbox_2'
+DB_NAME = 'sandbox_4'
 DB_TEST = 'test1'
 DB_IP = 'localhost'
 DB_PORT = '3306'

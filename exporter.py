@@ -3,7 +3,8 @@ from time import strftime, localtime
 
 from utils.db_conn import engine
 from utils.csv_handler import UnicodeWriter
-from utils.sql_interface import QUERIES, SqlExecutioner
+from utils.sql_interface import QUERIES, SqlExecutioner, table_headers
+
 
 
 class Exporter:
@@ -39,15 +40,15 @@ class InteractionsExporter(Exporter):
         self.queries = InteractionsExporter.queries
         self.filename  = "tfr-interactions-" + strftime("%Y%m%d", localtime()) + ".csv"
         self.table_name = 'tfrresults'
-        self.table_headers = self.executioner.run("SELECT * FROM {}".format(self.table_name)).keys()
-        
+        self.table_header = table_headers['tfrresults']
+
     def generate_export(self):
         """Generate TFR interactions export as a list of table rows."""
         self.backup(self.queries['backup'])
         export_list = self.select_all(self.queries['select_all'])
         self.truncate(self.queries['truncate'])
         # insert table header
-        export_list.insert(0, self.table_headers)
+        export_list.insert(0, self.table_header)
 
         return export_list
      
@@ -72,8 +73,8 @@ class ChangesExporter(Exporter):
         self.queries = ChangesExporter.queries
         self.filename  = "tfr-changes-" + strftime("%Y%m%d", localtime()) + ".csv"
         self.teable_name = 'tfrresultsfull'
-        self.table_headers = self.executioner.run("SELECT * FROM {}".format(self.table_name)).keys()
-
+        self.table_header = table_headers['tfrresultsfull']
+    
     def initialization_queries(self):
         print("Running initialization queries...\n")
         self.executioner.run(self.queries['ins_answers'])
@@ -88,7 +89,7 @@ class ChangesExporter(Exporter):
         export_list = self.select_all(self.queries['select_all'])
         self.truncate(self.queries['truncate'])
         # insert table header
-        export_list.insert(0, self.table_headers)
+        export_list.insert(0, self.table_header)
         return export_list
     
     def create_changes_csv(self):
@@ -98,7 +99,6 @@ class ChangesExporter(Exporter):
         c.create_csv()
 
 
-# TODO: This shit needs fixing
 class CsvCreator:
 
     def __init__(self, export_list, filename):

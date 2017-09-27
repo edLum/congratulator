@@ -1,7 +1,10 @@
 import unittest
+
 import sqlalchemy
+
 from utils.db_conn import engine
 from utils.sql_interface import SqlExecutioner
+from exporter import InteractionsExporter, ChangesExporter
 
 class TestSqlExecutioner(unittest.TestCase):
 
@@ -28,8 +31,16 @@ class TestCsvHandler(unittest.TestCase):
 class TestTfrExporter(unittest.TestCase):
 
     def setUp(self):
+        self.exporter_changes = ChangesExporter()
+        self.exporter_interactions = InteractionsExporter()
+
+    def test_interactions(self):
         pass
 
+class TestTfrImporter(unittest.TestCase):
+
+    def setUp(self):
+        pass
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestSqlExecutioner)

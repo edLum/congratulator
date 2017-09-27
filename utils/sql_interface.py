@@ -25,6 +25,7 @@ class SqlExecutioner:
         self.close_connection()
         return results
 
+conn = engine.connect()
 
 QUERIES = {'ins_answers': ("INSERT INTO `tfrresultsfull`( `supporter_id`, `operator_id`, `program`, `date`, " 
                                    "`answer`, `answer_comments`) "
@@ -85,6 +86,13 @@ QUERIES = {'ins_answers': ("INSERT INTO `tfrresultsfull`( `supporter_id`, `opera
 
            'interactions_truncate': ("DELETE FROM `tfrresults`;"),
            }
+
+table_headers = {'tfrresults': conn.execute("SELECT * FROM tfrresults").keys(),
+                 'tfrresultsfull': conn.execute("SELECT * FROM tfrresultsfull").keys(),
+                }
+
+conn.close()
+
 
 
 
